@@ -151,6 +151,7 @@ func TestTokenBucket_RequestBucketRefilling(t *testing.T) {
 			}
 
 			time.Sleep(tt.fields.sleepTime)
+			hadFailed := false
 
 			for i := 0; i < int(tt.fields.maxTokens); i++ {
 				canRequest := tb.Request(1)
@@ -158,10 +159,14 @@ func TestTokenBucket_RequestBucketRefilling(t *testing.T) {
 					t.Errorf("TokenBucket.Request() = %v, want %v", canRequest, tt.want)
 					return
 				}
+
+				if !canRequest {
+					hadFailed = true
+				}
 			}
 
-			if !tt.want {
-				t.Errorf("TokenBucket.Request(), expected failure but got success")
+			if !tt.want && !hadFailed {
+				t.Errorf("Expected fail")
 			}
 		})
 	}

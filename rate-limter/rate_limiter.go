@@ -1,6 +1,7 @@
 package rate_limiter
 
 import (
+	"fmt"
 	"math"
 	"time"
 )
@@ -33,6 +34,7 @@ func (tb *TokenBucket) refill() {
 
 func (tb *TokenBucket) Request(tokens float64) bool {
 	tb.refill()
+	fmt.Println(tokens, tb.tokens, tokens <= tb.tokens)
 	if tokens <= tb.tokens {
 		tb.tokens -= tokens
 		return true
